@@ -1,7 +1,7 @@
 var express    = require('express');
 var app        = express();
 var solr       = require( 'solr' );
-var solrClient = solr.createClient( { host:'192.168.254.11', port:8090, core:'testcore', path:'/' } );
+var solrClient = solr.createClient( { host:'192.168.254.11', port:8090, core:'lookingglass', path:'/' } );
 
 app.use( express.static( __dirname + '/public' ) );
 

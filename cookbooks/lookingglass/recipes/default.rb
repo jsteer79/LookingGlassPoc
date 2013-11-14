@@ -99,5 +99,5 @@ end
 
 service "lookingglass" do
   provider Chef::Provider::Service::Upstart
-  action :start
+  action :restart
 end

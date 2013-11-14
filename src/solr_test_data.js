@@ -1,5 +1,5 @@
 var solr       = require( 'solr' )
-  , solrClient = solr.createClient( { host:'192.168.254.12', port:8091, core:'testcore', path:'/' } );
+  , solrClient = solr.createClient( { host:'192.168.254.12', port:8091, core:'lookingglass', path:'/' } );
 
 //solrClient.autoCommit = true;
 

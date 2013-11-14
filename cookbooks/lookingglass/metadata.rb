@@ -8,6 +8,7 @@ name             "lookingglass"
 provides         "lookingglass"
 
 recipe "lookingglass", "Installs Node.JS based on the default installation method"
+recipe "lookingglass::solr", "Installs solr and sets up the lookingglass core"
 
 %w{ debian ubuntu centos redhat smartos }.each do |os|
     supports os

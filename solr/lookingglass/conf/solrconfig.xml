@@ -28,6 +28,10 @@
   <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.StandardDirectoryFactory}"/>
 
   <dataDir>${solr.core0.data.dir:}</dataDir>
+  <indexConfig>
+    <lockType>${solr.lock.type:simple}</lockType>
+    <unlockOnStartup>true</unlockOnStartup>
+  </indexConfig>
 
   <!-- To enable dynamic schema REST APIs, use the following for <schemaFactory>:
   
@@ -88,7 +92,7 @@
    
   <!-- config for the admin interface --> 
   <admin>
-    <defaultQuery>solr</defaultQuery>
+    <defaultQuery>*:*</defaultQuery>
   </admin>
 
 </config>

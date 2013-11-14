@@ -1,0 +1,15 @@
+[submodule "cookbooks/apt"]
+	path = cookbooks/apt
+	url = https://github.com/opscode-cookbooks/apt.git
+[submodule "cookbooks/build-essential"]
+	path = cookbooks/build-essential
+	url = https://github.com/opscode-cookbooks/build-essential.git
+[submodule "cookbooks/nodejs"]
+	path = cookbooks/nodejs
+	url = https://github.com/mdxp/nodejs-cookbook.git
+[submodule "cookbooks/java"]
+	path = cookbooks/java
+	url = https://github.com/opscode-cookbooks/java.git
+[submodule "cookbooks/hipsnip-jetty"]
+	path = cookbooks/hipsnip-jetty
+	url = https://github.com/hipsnip-cookbooks/jetty.git

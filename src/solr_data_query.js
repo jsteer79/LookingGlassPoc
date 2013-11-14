@@ -1,5 +1,5 @@
 var solr       = require( 'solr' )
-  , solrClient = solr.createClient( { host:'192.168.254.11', port:8090, core:'testcore', path:'/' } );
+  , solrClient = solr.createClient( { host:'192.168.254.11', port:8090, core:'lookingglass', path:'/' } );
 
 
 var query = 'id:1'
