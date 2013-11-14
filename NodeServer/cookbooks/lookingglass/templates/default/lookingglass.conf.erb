@@ -1,0 +1,17 @@
+# updater_node
+#
+
+description     "Updater node.js front end"
+author          "Todd Kennedy"
+
+start on runlevel [2345]
+
+stop on runlevel [06]
+
+respawn
+
+# What environment are we in
+chdir <%= node['lookingglass']['home'] %>
+
+# Start the process
+exec start-stop-daemon --start --chuid <%= node['lookingglass']['user'] %>:<%= node['lookingglass']['group'] %> --make-pidfile --pidfile /var/run/lookingglass.pid --exec <%= node['nodejs']['dir'] %>/bin/node -- <%= node['lookingglass']['home'] %>/index.js >> <%= node['lookingglass']['log'] %>/lookingglass.log 2>&1
