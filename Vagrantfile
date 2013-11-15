@@ -6,7 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.define "node" do |node|
+  config.vm.define "node" do |node| 
       node.vm.box = "Ubuntu130432"
       node.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-i386-vagrant-disk1.box"
 
@@ -16,6 +16,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       node.vm.synced_folder "src", "/hostsrc"
 
       node.vm.provision :chef_solo do |chef|
+		 chef.http_proxy  = "http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/"
+         chef.https_proxy = "http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/"
          chef.add_recipe "lookingglass"
       end
   end
@@ -30,7 +32,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     solr.vm.synced_folder "solr", "/hostsolr"
 
     solr.vm.provision :chef_solo do |chef|
-        chef.add_recipe "lookingglass::solr"
+		chef.http_proxy  = "http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/"
+        chef.https_proxy = "http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/"
+		chef.add_recipe "lookingglass::solr"
 
         chef.json = {  :java => {
                          :oracle          => { "accept_oracle_download_terms" => true },

@@ -37,3 +37,5 @@ default['solr']['log']['level'] = 'INFO'
 default['solr']['log']['class'] = 'java.util.logging.ConsoleHandler'
 default['solr']['log']['formatter'] = 'java.util.logging.SimpleFormatter'
 
+default['proxy']['http_proxy'] = 'http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/'
+

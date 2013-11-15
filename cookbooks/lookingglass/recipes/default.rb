@@ -8,8 +8,21 @@ require 'fileutils'
 ################################################################################
 # Require node recipe
 
+include_recipe "lookingglass::proxy"
 include_recipe "nodejs"
 
+################################################################################
+# configure npm
+
+bash "Configure npm for the proxy" do
+  user "root"
+  code <<-EOH
+    npm config set proxy #{node['proxy']['http_proxy']} --global
+	npm config set https-proxy #{node['proxy']['http_proxy']} --global
+	npm config set strict-ssl false --global
+  EOH
+  not_if node['proxy']['http_proxy'].empty?
+end
 ################################################################################
 # Create user and group
 
@@ -45,9 +58,6 @@ end
 ################################################################################
 # Clear old source files
 
-################################################################################
-# Copy source files
-
 ruby_block 'Copy source files into home directory' do
   block do
     source_files = Dir.glob(File.join(node['lookingglass']['home'], '**' ) )
@@ -71,6 +81,17 @@ ruby_block 'Copy source files into home directory' do
     FileUtils.cp_r(source_files, home_dir)
     raise "Failed to copy source files" unless !Dir.glob(File.join(home_dir, '*.js')).empty?
   end
+end
+
+################################################################################
+# NPM Modules
+
+bash "npm install modules" do
+  cwd node['lookingglass']['home']
+  user "root"
+  code <<-EOH
+    npm install
+  EOH
 end
 
 ################################################################################
