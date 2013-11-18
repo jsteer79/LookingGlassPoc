@@ -21,7 +21,7 @@ bash "Configure npm for the proxy" do
 	npm config set https-proxy #{node['proxy']['http_proxy']} --global
 	npm config set strict-ssl false --global
   EOH
-  not_if node['proxy']['http_proxy'].empty?
+  not_if { node['proxy']['http_proxy'].empty? }
 end
 ################################################################################
 # Create user and group
@@ -70,11 +70,30 @@ ruby_block 'Copy source files into home directory' do
 end
 
 ################################################################################
+# checkout source files
+
+Chef::Log.info "Exporting #{node['lookingglass']['source']} to #{node['lookingglass']['temp']}"
+
+directory node['lookingglass']['temp'] do
+  owner node['lookingglass']['user']
+  group node['lookingglass']['group']
+  mode "755"
+  recursive true
+  action :create
+end
+
+git "#{node['lookingglass']['temp']}" do
+    repository node['lookingglass']['source']
+    reference  node['lookingglass']['version']
+    action :export
+end
+
+################################################################################
 # Copy source files
 
 ruby_block 'Copy source files into home directory' do
   block do
-    source_files = Dir.glob(File.join(node['lookingglass']['source'], '**' ) )
+    source_files = Dir.glob(File.join(node['lookingglass']['temp'], 'src', '**' ) )
     home_dir     = node['lookingglass']['home']
 
     Chef::Log.info "Copying #{source_files} into #{home_dir}"

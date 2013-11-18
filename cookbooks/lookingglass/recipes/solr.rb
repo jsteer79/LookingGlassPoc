@@ -146,13 +146,31 @@ end
 
 node.set['jetty']['java_options'] = (node['jetty']['java_options'] + solr_env_vars).uniq
 
+################################################################################
+# checkout source files
+
+Chef::Log.info "Exporting #{node['lookingglass']['source']} to #{node['lookingglass']['temp']}"
+
+directory node['lookingglass']['temp'] do
+  owner node['jetty']['user']
+  group node['jetty']['group']
+  mode "755"
+  recursive true
+  action :create
+end
+
+git "#{node['lookingglass']['temp']}" do
+    repository node['lookingglass']['source']
+    reference  node['lookingglass']['version']
+    action :export
+end
 
 ################################################################################
 # Configure
 
 ruby_block 'Copy Solr configurations files' do
   block do
-    config_files = Dir.glob(node['solr']['conf_src'] + '**')
+    config_files = Dir.glob( File.join( node['lookingglass']['temp'], 'solr', '**' ) )
     Chef::Log.info "Copying #{config_files} into #{node['solr']['home']}"
     FileUtils.cp_r(config_files, "#{node['solr']['home']}/")
     FileUtils.chown_R(node['jetty']['user'],node['jetty']['group'],node['solr']['home'])
@@ -162,16 +180,6 @@ ruby_block 'Copy Solr configurations files' do
   action :create
   notifies :restart, "service[jetty]"
 end
-
-# ruby_block "create the looking glass core" do
-#   block do
-#     sleep(30)
-#     Chef::Log.info "Opening http://localhost:#{node['jetty']['port']}#{node['solr']['context_path']}admin/cores?action=CREATE&name=lookingglass&instanceDir=/usr/share/solr/lookingglass&dataDir=/usr/local/solr/data"
-#     open( "http://localhost:#{node['jetty']['port']}#{node['solr']['context_path']}admin/cores?action=CREATE&name=lookingglass&instanceDir=/usr/share/solr/lookingglass&dataDir=/usr/local/solr/data" ) { |f|
-#         f.each_line {|line| Chef::Log.info line}
-#     }
-#   end
-# end
 
 logging_properties_file = "#{node['jetty']['home']}/etc/logging.properties"
 template logging_properties_file do

@@ -6,7 +6,9 @@
 default['lookingglass']['home']     = '/var/lookingglass'
 default['lookingglass']['user']     = 'lookingglass'
 default['lookingglass']['group']    = 'lookingglass'
-default['lookingglass']['source']   = '/hostsrc'
+default['lookingglass']['source']   = 'https://github.com/jsteer79/LookingGlassPoc.git'
+default['lookingglass']['version']  = 'master'
+default['lookingglass']['temp']     = '/usr/local/src/lookingglass'
 default['lookingglass']['log']      = '/var/log/lookingglass'
 
 

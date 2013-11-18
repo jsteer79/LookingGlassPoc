@@ -1,5 +1,6 @@
-if node['proxy']['http_proxy']
-  Chef::Log.info(node['proxy']['http_proxy']) 
+Chef::Log.info("LookingGlass::proxy Start")
+if !node['proxy']['http_proxy'].empty?
+  Chef::Log.info("Proxy: #{node['proxy']['http_proxy']}")
   proxy = "Acquire::http::Proxy \""
   proxy += node['proxy']['http_proxy']
   proxy += "\";\n"
@@ -17,3 +18,4 @@ else
     only_if {::File.exists?("/etc/apt/apt.conf.d/01proxy")}
   end
 end
+Chef::Log.info("LookingGlass::proxy Done")
