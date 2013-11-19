@@ -23,94 +23,104 @@ bash "Configure npm for the proxy" do
   EOH
   not_if { node['proxy']['http_proxy'].empty? }
 end
-################################################################################
-# Create user and group
 
-user node['lookingglass']['user'] do
-  home  node['lookingglass']['home']
-  shell '/bin/false'
-  system true
-  action :create
-end
+if node['lookingglass']['env'] == 'dev'
 
-group node['lookingglass']['group'] do
-  members "lookingglass"
-  system true
-  action :create
-end
+   node.set['lookingglass']['user']  = 'vagrant'
+   node.set['lookingglass']['group'] = 'vagrant'
 
-################################################################################
-# Create home directory
+else
 
-directory node['lookingglass']['home'] do
-  owner node['lookingglass']['user']
-  group node['lookingglass']['group']
-  mode "755"
-  recursive true
-  action :create
-end
+    ################################################################################
+    # Create user and group
 
-service 'lookingglass' do
-  provider Chef::Provider::Service::Upstart
-  action :nothing
-end
+    user node['lookingglass']['user'] do
+      home  node['lookingglass']['home']
+      shell '/bin/false'
+      system true
+      action :create
+    end
 
-################################################################################
-# Clear old source files
+    group node['lookingglass']['group'] do
+      members "lookingglass"
+      system true
+      action :create
+    end
 
-ruby_block 'Copy source files into home directory' do
-  block do
-    source_files = Dir.glob(File.join(node['lookingglass']['home'], '**' ) )
-    home_dir     = node['lookingglass']['home']
+    ################################################################################
+    # Create home directory
 
-    Chef::Log.info "deleting old source files #{source_files}"
-    FileUtils.rm_r(source_files)
-    raise "Failed to delete old source files" unless Dir.glob(File.join(home_dir, '*.js')).empty?
-  end
-end
+    directory node['lookingglass']['home'] do
+      owner node['lookingglass']['user']
+      group node['lookingglass']['group']
+      mode "755"
+      recursive true
+      action :create
+    end
 
-################################################################################
-# checkout source files
+    service 'lookingglass' do
+      provider Chef::Provider::Service::Upstart
+      action :nothing
+    end
 
-Chef::Log.info "Exporting #{node['lookingglass']['source']} to #{node['lookingglass']['temp']}"
+    ################################################################################
+    # Clear old source files
 
-directory node['lookingglass']['temp'] do
-  owner node['lookingglass']['user']
-  group node['lookingglass']['group']
-  mode "755"
-  recursive true
-  action :create
-end
+    ruby_block 'Copy source files into home directory' do
+      block do
+        source_files = Dir.glob(File.join(node['lookingglass']['home'], '**' ) )
+        home_dir     = node['lookingglass']['home']
 
-git "#{node['lookingglass']['temp']}" do
-    repository node['lookingglass']['source']
-    reference  node['lookingglass']['version']
-    action :export
-end
+        Chef::Log.info "deleting old source files #{source_files}"
+        FileUtils.rm_r(source_files)
+        raise "Failed to delete old source files" unless Dir.glob(File.join(home_dir, '*.js')).empty?
+      end
+    end
 
-################################################################################
-# Copy source files
+    ################################################################################
+    # checkout source files
 
-ruby_block 'Copy source files into home directory' do
-  block do
-    source_files = Dir.glob(File.join(node['lookingglass']['temp'], 'src', '**' ) )
-    home_dir     = node['lookingglass']['home']
+    Chef::Log.info "Exporting #{node['lookingglass']['source']} to #{node['lookingglass']['temp']}"
 
-    Chef::Log.info "Copying #{source_files} into #{home_dir}"
-    FileUtils.cp_r(source_files, home_dir)
-    raise "Failed to copy source files" unless !Dir.glob(File.join(home_dir, '*.js')).empty?
-  end
-end
+    directory node['lookingglass']['temp'] do
+      owner node['lookingglass']['user']
+      group node['lookingglass']['group']
+      mode "755"
+      recursive true
+      action :create
+    end
 
-################################################################################
-# NPM Modules
+    git "#{node['lookingglass']['temp']}" do
+        repository node['lookingglass']['source']
+        reference  node['lookingglass']['version']
+        action :export
+    end
 
-bash "npm install modules" do
-  cwd node['lookingglass']['home']
-  user "root"
-  code <<-EOH
-    npm install
-  EOH
+    ################################################################################
+    # Copy source files
+
+    ruby_block 'Copy source files into home directory' do
+      block do
+        source_files = Dir.glob(File.join(node['lookingglass']['temp'], 'src', '**' ) )
+        home_dir     = node['lookingglass']['home']
+
+        Chef::Log.info "Copying #{source_files} into #{home_dir}"
+        FileUtils.cp_r(source_files, home_dir)
+        raise "Failed to copy source files" unless !Dir.glob(File.join(home_dir, '*.js')).empty?
+      end
+    end
+
+    ################################################################################
+    # NPM Modules
+
+    bash "npm install modules" do
+      cwd node['lookingglass']['home']
+      user "root"
+      code <<-EOH
+        npm install
+      EOH
+    end
+
 end
 
 ################################################################################

@@ -146,23 +146,26 @@ end
 
 node.set['jetty']['java_options'] = (node['jetty']['java_options'] + solr_env_vars).uniq
 
-################################################################################
-# checkout source files
+if node['lookingglass']['env'] != 'dev'
 
-Chef::Log.info "Exporting #{node['lookingglass']['source']} to #{node['lookingglass']['temp']}"
+    ################################################################################
+    # checkout source files
 
-directory node['lookingglass']['temp'] do
-  owner node['jetty']['user']
-  group node['jetty']['group']
-  mode "755"
-  recursive true
-  action :create
-end
+    Chef::Log.info "Exporting #{node['lookingglass']['source']} to #{node['lookingglass']['temp']}"
 
-git "#{node['lookingglass']['temp']}" do
-    repository node['lookingglass']['source']
-    reference  node['lookingglass']['version']
-    action :export
+    directory node['lookingglass']['temp'] do
+      owner node['jetty']['user']
+      group node['jetty']['group']
+      mode "755"
+      recursive true
+      action :create
+    end
+
+    git "#{node['lookingglass']['temp']}" do
+        repository node['lookingglass']['source']
+        reference  node['lookingglass']['version']
+        action :export
+    end
 end
 
 ################################################################################

@@ -13,6 +13,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       node.vm.network :forwarded_port, guest: 8080, host: 8080
       node.vm.network :private_network, ip: "192.168.254.10"
 
+      config.vm.synced_folder "src", "/hostsrc"
+
       node.vm.provision :chef_solo do |chef|
 		 # chef.http_proxy  = "http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/"
          # chef.https_proxy = "http://dev-scheduler:devscripting@web.proxy.s3ms.com:8080/"
@@ -20,6 +22,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          chef.add_recipe "lookingglass"
          chef.json = {  :proxy => {
                             :http_proxy     => "",
+                        },
+                        :lookingglass => {
+                            :env            => "dev",
+                            :home           => "/hostsrc",
                         },
                      }
       end
@@ -38,6 +44,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		chef.add_recipe "git"
 		chef.add_recipe "lookingglass::solr"
 
+        config.vm.synced_folder "./", "/host"
+
         chef.json = {  :java => {
                          :oracle          => { "accept_oracle_download_terms" => true },
                          :jdk_version     => "7"
@@ -51,8 +59,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                        :proxy => {
                           :http_proxy     => "",
                        },
+                       :lookingglass => {
+                          :env            => "dev",
+                          :temp           => "/host",
+                       },
                     }
     end
   end
-
 end

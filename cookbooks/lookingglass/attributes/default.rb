@@ -10,6 +10,7 @@ default['lookingglass']['source']   = 'https://github.com/jsteer79/LookingGlassP
 default['lookingglass']['version']  = 'master'
 default['lookingglass']['temp']     = '/usr/local/src/lookingglass'
 default['lookingglass']['log']      = '/var/log/lookingglass'
+default['lookingglass']['env']      = 'live'
 
 
 
