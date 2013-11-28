@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "express"     : "3.x",
-    "solr" : "0.2.2"
+    "solr" : "0.2.2",
+    "nconf" : "0.6.*"
   }
 }

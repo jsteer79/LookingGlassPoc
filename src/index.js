@@ -1,7 +1,9 @@
 var express    = require('express');
 var app        = express();
+var nconf      = require( 'nconf' );
+nconf.argv().env().file( { file:  __dirname + '/config.json' } );
 var solr       = require( 'solr' );
-var solrClient = solr.createClient( { host:'192.168.254.11', port:8090, core:'lookingglass', path:'/' } );
+var solrClient = solr.createClient( nconf.get('solr') );
 
 app.use( express.static( __dirname + '/public' ) );
 
@@ -22,10 +24,7 @@ var getResults = function( req, res ) {
         res.send( 200, response );
     });
 }
-
+console.log( 'Listening on: ' + nconf.get('port') );
 app.get( '/query/:solr_query', getResults );
 app.get( '/query', getResults );
-
-
-
-app.listen( 8080 );
+app.listen( nconf.get('port') );
