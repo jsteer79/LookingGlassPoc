@@ -1,0 +1,10 @@
+<add>
+    <doc>
+        <field name="id">2</field>
+        <field name="name">Test User 2</field>
+        <field name="cv"><![CDATA[Blah Php, Mysql & Linux]]></field>
+        <field name="skill">PHP</field>
+        <field name="skill">MYSQL</field>
+        <field name="skill">LINUX</field>
+    </doc>
+</add>

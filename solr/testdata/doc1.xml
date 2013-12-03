@@ -1,0 +1,11 @@
+<add>
+    <doc>
+        <field name="id">1</field>
+        <field name="name">Test User 1</field>
+        <field name="cv"><![CDATA[Blah Php, Oracle, Agile & Solr]]></field>
+        <field name="skill">PHP</field>
+        <field name="skill">ORACLE</field>
+        <field name="skill">AGILE</field>
+        <field name="skill">SOLR</field>
+    </doc>
+</add>

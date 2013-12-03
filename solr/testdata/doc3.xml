@@ -1,0 +1,11 @@
+<add>
+    <doc>
+        <field name="id">3</field>
+        <field name="name">Test User 3</field>
+        <field name="cv"><![CDATA[Blah Java, Oracle, PLSQL & Solr]]></field>
+        <field name="skill">JAVA</field>
+        <field name="skill">ORACLE</field>
+        <field name="skill">PLSQL</field>
+        <field name="skill">SOLR</field>
+    </doc>
+</add>
